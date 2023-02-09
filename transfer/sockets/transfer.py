@@ -37,6 +37,7 @@ class ServerSocket:
             f'Listening at {self.host}:{self.port}\n'
             'Waiting for the client to connect !*!'
         )
+        return self
 
     def __exit__(self, *args):
         self.close_sockets()
@@ -53,22 +54,22 @@ class ServerSocket:
         print(f'{address} is connected and ready to upload')
         return client_socket
 
-    def receive_file(self):
-        received = self.client_socket.recv(BUFFER_SIZE).decode()
+    def receive_file(self, client_socket):
+        received = client_socket.recv(BUFFER_SIZE).decode()
         return received
 
-    def download_file(self):
-        filename, filesize = self.received.split(SEPARATOR)
+    def download_file(self, client_socket, received_file):
+        filename, filesize = received_file.split(self.separator)
         filename = os.path.basename(filename)
         filesize = int(filesize)
         with open(filename, 'wb') as f:
             while True:
                 try:
-                    bytes_read = self.client_socket.recv(BUFFER_SIZE)
+                    bytes_read = client_socket.recv(BUFFER_SIZE)
                 except Exception as err:
                     raise err
                 f.write(bytes_read)
 
-    def close_sockets(self):
-        self.client_socket.close()
+    def close_sockets(self, client_socket):
+        client_socket.close()
         self.transfer_socket.close()
