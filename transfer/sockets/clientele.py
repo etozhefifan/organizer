@@ -57,9 +57,10 @@ class ClientSocket:
             f"{filename}{self.separator}{filesize}".encode()
         )
         with open(filename, mode='rb') as f:
-            while True:
+            while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
                 try:
                     bytes_read = f.read(BUFFER_SIZE)
+                    filesize -= BUFFER_SIZE
                 except Exception as err:
                     raise err
                 self.transfer_socket.sendall(bytes_read)

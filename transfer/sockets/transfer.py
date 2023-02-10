@@ -38,9 +38,9 @@ class ServerSocket:
             'Waiting for the client to connect !*!'
         )
         return self
-
+    
     def __exit__(self, *args):
-        self.close_sockets()
+        pass
 
     def __init__(self):
         self.transfer_socket = socket.socket()
@@ -50,8 +50,11 @@ class ServerSocket:
         self.transfer_socket.listen(10)
 
     def accept_connection(self):
-        client_socket, address = self.transfer_socket.accept()
-        print(f'{address} is connected and ready to upload')
+        try:
+            client_socket, address = self.transfer_socket.accept()
+            print(f'{address} is connected and ready to upload')
+        except ValueError:
+            print('client and address were not connected')
         return client_socket
 
     def receive_file(self, client_socket):
@@ -63,12 +66,15 @@ class ServerSocket:
         filename = os.path.basename(filename)
         filesize = int(filesize)
         with open(filename, 'wb') as f:
-            while True:
+            while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
                 try:
                     bytes_read = client_socket.recv(BUFFER_SIZE)
+                    filesize -= BUFFER_SIZE
                 except Exception as err:
                     raise err
                 f.write(bytes_read)
+        # КАК ЕГО ЗАКРЫТЬ?!?!?!?!?!?!?!
+        client_socket.close()
 
     def close_sockets(self, client_socket):
         client_socket.close()
