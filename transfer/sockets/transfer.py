@@ -64,14 +64,13 @@ class ServerSocket:
     def download_file(self, client_socket, received_file):
         filename, filesize = self.get_file(received_file)
         with open(filename, 'wb') as f:
-            while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
+            while True:
                 try:
                     bytes_read = client_socket.recv(BUFFER_SIZE)
                     filesize -= BUFFER_SIZE
                 except Exception as err:
                     raise err
                 f.write(bytes_read)
-        client_socket.close()
 
     def get_file(self, received_file):
         filename, filesize = received_file.split(self.separator)
