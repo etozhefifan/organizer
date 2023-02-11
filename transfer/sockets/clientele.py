@@ -56,6 +56,12 @@ class ClientSocket:
         self.transfer_socket.send(
             f"{filename}{self.separator}{filesize}".encode()
         )
+        progress = tqdm(
+            range(filesize),
+            f'Sending {filename}',
+            unit='B',
+            unit_scale=True,
+        )
         with open(filename, mode='rb') as f:
             while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
                 try:
@@ -63,6 +69,7 @@ class ClientSocket:
                     filesize -= BUFFER_SIZE
                 except Exception as err:
                     raise err
+                progress.update(len(bytes_read))
                 self.transfer_socket.sendall(bytes_read)
 
     def close_socket(self):
