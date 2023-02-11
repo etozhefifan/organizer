@@ -38,7 +38,7 @@ class ServerSocket:
             'Waiting for the client to connect !*!'
         )
         return self
-    
+
     def __exit__(self, *args):
         pass
 
@@ -62,9 +62,7 @@ class ServerSocket:
         return received
 
     def download_file(self, client_socket, received_file):
-        filename, filesize = received_file.split(self.separator)
-        filename = os.path.basename(filename)
-        filesize = int(filesize)
+        filename, filesize = self.get_file(received_file)
         with open(filename, 'wb') as f:
             while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
                 try:
@@ -73,8 +71,11 @@ class ServerSocket:
                 except Exception as err:
                     raise err
                 f.write(bytes_read)
-        # КАК ЕГО ЗАКРЫТЬ?!?!?!?!?!?!?!
         client_socket.close()
+
+    def get_file(self, received_file):
+        filename, filesize = received_file.split(self.separator)
+        return os.path.basename(filename), int(filesize)
 
     def close_sockets(self, client_socket):
         client_socket.close()
