@@ -1,6 +1,7 @@
 import socket
 import os
 
+from io import BytesIO
 from tqdm import tqdm
 
 from config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
@@ -63,15 +64,13 @@ class ClientSocket:
             unit_scale=True,
         )
         with open(filename, mode='rb') as f:
-            while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
-                try:
-                    bytes_read = f.read(BUFFER_SIZE)
-                    filesize -= BUFFER_SIZE
-                except Exception as err:
-                    raise err
-                progress.update(len(bytes_read))
-                self.transfer_socket.sendall(bytes_read)
+            bytes_to_transfer = f.read(BUFFER_SIZE)
+            while bytes_to_transfer:
+                progress.update(len(bytes_to_transfer))
+                self.transfer_socket.send(bytes_to_transfer)
+                bytes_to_transfer = f.read(BUFFER_SIZE)
 
     def close_socket(self):
         print('[-] Connection closed')
+        self.transfer_socket.shutdown(socket.SHUT_WR)
         self.transfer_socket.close()
