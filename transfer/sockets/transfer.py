@@ -70,8 +70,7 @@ class ServerSocket:
                 bytes_received = client_socket.recv(BUFFER_SIZE)
 
     def get_file(self, received_file):
-        filename, filesize = received_file.split(self.separator)
-        return os.path.basename(filename), int(filesize)
+        return os.path.basename(received_file)
 
     def close_sockets(self, client_socket):
         client_socket.close()
