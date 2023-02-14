@@ -1,8 +1,10 @@
 import socket
 import os
+import time
 
 from io import BytesIO
 from tqdm import tqdm
+
 
 from config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
 
@@ -54,21 +56,31 @@ class ClientSocket:
     def send_file(self):
         filename = input("File to Transfer : ")
         filesize = os.path.getsize(filename)
+        time.sleep(0)
         self.transfer_socket.send(
-            f"{filename}{self.separator}{filesize}".encode()
+            f"{filename}".encode()
         )
-        progress = tqdm(
-            range(filesize),
-            f'Sending {filename}',
-            unit='B',
-            unit_scale=True,
+        self.open_file(
+            filename,
+            self.create_progress_bar(filename, filesize),
         )
+
+    def open_file(self, filename, progress):
         with open(filename, mode='rb') as f:
             bytes_to_transfer = f.read(BUFFER_SIZE)
             while bytes_to_transfer:
                 progress.update(len(bytes_to_transfer))
                 self.transfer_socket.send(bytes_to_transfer)
                 bytes_to_transfer = f.read(BUFFER_SIZE)
+
+    def create_progress_bar(self, filename, filesize):
+        progress = tqdm(
+            range(filesize),
+            f'Sending {filename}',
+            unit='B',
+            unit_scale=True,
+        )
+        return progress
 
     def close_socket(self):
         print('[-] Connection closed')

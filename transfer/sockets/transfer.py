@@ -62,7 +62,7 @@ class ServerSocket:
         return received
 
     def download_file(self, client_socket, received_file):
-        filename, filesize = self.get_file(received_file)
+        filename = self.get_file(received_file)
         with open(filename, 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
