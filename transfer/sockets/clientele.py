@@ -56,10 +56,9 @@ class ClientSocket:
     def send_file(self):
         filename = input("File to Transfer : ")
         filesize = os.path.getsize(filename)
-        time.sleep(0)
-        self.transfer_socket.send(
-            f"{filename}".encode()
-        )
+        # self.transfer_socket.send(
+        #     f"{filename}".encode()
+        # )
         self.open_file(
             filename,
             self.create_progress_bar(filename, filesize),
