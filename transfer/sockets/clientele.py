@@ -3,29 +3,8 @@ import os
 
 from tqdm import tqdm
 
-from config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
 
-# s = socket.socket()
-# print(f"[+] Connecting to {HOST_CLIENT}:{PORT}")
-# s.connect((HOST_CLIENT, PORT))
-# print("[+] Connected to ", HOST_CLIENT)
-# filename = input("File to Transfer : ")
-# filesize = os.path.getsize(filename)
-# s.send(f"{filename}{SEPARATOR}{filesize}".encode(encoding='utf-8'))
-# progress = tqdm(
-#     range(filesize),
-#     f'Sending {filename}',
-#     unit='B',
-#     unit_scale=True
-# )
-# with open(filename, mode="rb") as f:
-#     while True:
-#         bytes_read = f.read(BUFFER_SIZE)
-#         if not bytes_read:
-#             break
-#         s.sendall(bytes_read)
-#         progress.update(len(bytes_read))
-# s.close()
+from config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
 
 
 class ClientSocket:
@@ -50,28 +29,44 @@ class ClientSocket:
         except ConnectionRefusedError as err:
             raise err
 
-    def send_file(self):
-        filename = input("File to Transfer : ")
-        filesize = os.path.getsize(filename)
-        self.transfer_socket.send(
-            f"{filename}{self.separator}{filesize}".encode()
+    def send_file(self, filename, filesize):
+        self.open_file(
+            filename,
+            self.create_progress_bar(filename, filesize),
         )
-        progress = tqdm(
+
+    def open_file(self, filename, progress_bar):
+        with open(filename, mode='rb') as f:
+            bytes_to_transfer = f.read(BUFFER_SIZE)
+            while bytes_to_transfer:
+                progress_bar.update(len(bytes_to_transfer))
+                self.transfer_socket.send(bytes_to_transfer)
+                bytes_to_transfer = f.read(BUFFER_SIZE)
+
+    def create_progress_bar(self, filename, filesize):
+        progress_bar = tqdm(
             range(filesize),
             f'Sending {filename}',
             unit='B',
             unit_scale=True,
         )
-        with open(filename, mode='rb') as f:
-            while (filesize - BUFFER_SIZE) > 0 or filesize > 0:
-                try:
-                    bytes_read = f.read(BUFFER_SIZE)
-                    filesize -= BUFFER_SIZE
-                except Exception as err:
-                    raise err
-                progress.update(len(bytes_read))
-                self.transfer_socket.sendall(bytes_read)
+        return progress_bar
+
+    def send_file_metadata(self, filename, filesize):
+        return self.transfer_socket.sendall(
+            f'{filename}{SEPARATOR}{filesize}'.encode()
+        )
+
+    def data_received(self):
+        confirmation = self.transfer_socket.recv(BUFFER_SIZE)
+        print(confirmation)
+    
+    def set_file(self):
+        filename = input('File to transfer : ')
+        filesize = os.path.getsize(filename)
+        return filename, filesize
 
     def close_socket(self):
         print('[-] Connection closed')
+        self.transfer_socket.shutdown(socket.SHUT_WR)
         self.transfer_socket.close()

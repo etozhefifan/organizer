@@ -4,4 +4,7 @@ from sockets.clientele import ClientSocket
 if __name__ == '__main__':
     with ClientSocket() as cs:
         cs.connect_socket()
-        cs.send_file()
+        filename, filesize = cs.set_file()
+        cs.send_file_metadata(filename, filesize)
+        cs.data_received()
+        cs.send_file(filename, filesize)
