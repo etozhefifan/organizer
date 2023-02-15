@@ -55,10 +55,10 @@ class ServerSocket:
     def separate_metadata(self, metadata):
         filename, filesize = metadata.split(SEPARATOR)
         return filename, filesize
-    
+
     def create_progress_bar(self, filename, filesize):
         progress_bar = tqdm(
-            range(filesize),
+            range(int(filesize)),
             f'Downloading {filename}',
             unit='B',
             unit_scale=True,
