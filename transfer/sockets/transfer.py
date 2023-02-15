@@ -38,7 +38,7 @@ class ServerSocket:
 
     def receive_metadata(self, client_socket):
         received = client_socket.recv(BUFFER_SIZE).decode()
-        client_socket.send('Metadata received. Start downloading')
+        client_socket.send(b'Metadata received. Start downloading')
         return received
 
     def download_file(self, client_socket, filename, progress_bar):
