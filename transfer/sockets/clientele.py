@@ -53,12 +53,7 @@ class ClientSocket:
         except ConnectionRefusedError as err:
             raise err
 
-    def send_file(self):
-        filename = input("File to Transfer : ")
-        filesize = os.path.getsize(filename)
-        # self.transfer_socket.send(
-        #     f"{filename}".encode()
-        # )
+    def send_file(self, filename, filesize):
         self.open_file(
             filename,
             self.create_progress_bar(filename, filesize),
@@ -80,6 +75,16 @@ class ClientSocket:
             unit_scale=True,
         )
         return progress
+
+    def send_file_metadata(self, filename, filesize):
+        return self.transfer_socket.sendall(
+            f'{filename}{SEPARATOR}{filesize}'.encode()
+        )
+    
+    def set_file(self):
+        filename = input('File to transfer : ')
+        filesize = os.path.getsize(filename)
+        return filename, filesize
 
     def close_socket(self):
         print('[-] Connection closed')

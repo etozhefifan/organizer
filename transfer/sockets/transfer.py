@@ -57,19 +57,20 @@ class ServerSocket:
             print('client and address were not connected')
         return client_socket
 
-    def receive_file(self, client_socket):
-        received = client_socket.recv(BUFFER_SIZE).decode()
+    def receive_metadata(self, client_socket):
+        received = client_socket.recv().decode()
         return received
 
-    def download_file(self, client_socket):
-        with open('downloaded_file', 'wb') as f:
+    def download_file(self, client_socket, received_metadata):
+        filename = self.get_file(received_metadata)
+        with open(filename, 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
                 f.write(bytes_received)
                 bytes_received = client_socket.recv(BUFFER_SIZE)
 
-    def get_file(self, received_file):
-        return os.path.basename(received_file)
+    def get_file(self, received_metadata):
+        return os.path.basename(received_metadata)
 
     def close_sockets(self, client_socket):
         client_socket.close()
