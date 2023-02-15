@@ -58,11 +58,13 @@ class ServerSocket:
         return client_socket
 
     def receive_metadata(self, client_socket):
-        received = client_socket.recv().decode()
+        received = client_socket.recv(BUFFER_SIZE).decode()
         return received
 
     def download_file(self, client_socket, received_metadata):
-        filename = self.get_file(received_metadata)
+        filename, filesize = self.separate_metadata(
+            self.get_file(received_metadata)
+        )
         with open(filename, 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
@@ -71,6 +73,10 @@ class ServerSocket:
 
     def get_file(self, received_metadata):
         return os.path.basename(received_metadata)
+
+    def separate_metadata(self, metadata):
+        filename, filesize = metadata.split(SEPARATOR)
+        return filename, filesize
 
     def close_sockets(self, client_socket):
         client_socket.close()
