@@ -6,4 +6,5 @@ if __name__ == '__main__':
         cs.connect_socket()
         filename, filesize = cs.set_file()
         cs.send_file_metadata(filename, filesize)
+        cs.data_received()
         cs.send_file(filename, filesize)

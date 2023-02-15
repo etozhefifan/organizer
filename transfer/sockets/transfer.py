@@ -1,30 +1,9 @@
 import socket
 import os
 
+from tqdm import tqdm
+
 from config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR
-
-# sock = socket.socket()
-
-# sock.bind((SERVER_HOST, SERVER_PORT))
-# sock.listen(10)
-# print(
-#     f'Listening at {SERVER_HOST}:{SERVER_PORT}\n'
-#     'Waiting for the client to connect !*!'
-# )
-# client_socket, address = sock.accept()
-# print(f'{address} is connected')
-# received = client_socket.recv(BUFFER_SIZE).decode()
-# filename, filesize = received.split(SEPARATOR)
-# filename = os.path.basename(filename)
-# filesize = int(filesize)
-# with open(filename, "wb") as f:
-#     while True:
-#         bytes_read = client_socket.recv(BUFFER_SIZE)
-#         if not bytes_read:
-#             break
-#         f.write(bytes_read)
-# client_socket.close()
-# socket.close()
 
 
 class ServerSocket:
@@ -59,17 +38,15 @@ class ServerSocket:
 
     def receive_metadata(self, client_socket):
         received = client_socket.recv(BUFFER_SIZE).decode()
-        client_socket.send(b'Received_data')
+        client_socket.send('Metadata received. Start downloading')
         return received
 
-    def download_file(self, client_socket, received_metadata):
-        filename, filesize = self.separate_metadata(
-            self.get_file(received_metadata)
-        )
+    def download_file(self, client_socket, filename, progress_bar):
         with open(filename, 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
                 f.write(bytes_received)
+                progress_bar.update(len(bytes_received))
                 bytes_received = client_socket.recv(BUFFER_SIZE)
 
     def get_file(self, received_metadata):
@@ -78,6 +55,15 @@ class ServerSocket:
     def separate_metadata(self, metadata):
         filename, filesize = metadata.split(SEPARATOR)
         return filename, filesize
+    
+    def create_progress_bar(self, filename, filesize):
+        progress_bar = tqdm(
+            range(filesize),
+            f'Downloading {filename}',
+            unit='B',
+            unit_scale=True,
+        )
+        return progress_bar
 
     def close_sockets(self, client_socket):
         client_socket.close()
