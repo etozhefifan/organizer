@@ -5,6 +5,6 @@ if __name__ == '__main__':
         ss.setup_socket()
         while True:
             client_socket = ss.accept_connection()
-            received_file = ss.receive_file(client_socket)
-            ss.download_file(client_socket, received_file)
+            received_metadata = ss.receive_metadata(client_socket)
+            ss.download_file(client_socket, received_metadata)
         ss.close_sockets(client_socket)
