@@ -3,7 +3,7 @@ import os
 
 from tqdm import tqdm
 
-from config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR
+from config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, PATH_TO_DIR
 
 
 class ServerSocket:
@@ -42,7 +42,7 @@ class ServerSocket:
         return received
 
     def download_file(self, client_socket, filename, progress_bar):
-        with open(filename, 'wb') as f:
+        with open(os.path.join(PATH_TO_DIR, filename), 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
                 f.write(bytes_received)
