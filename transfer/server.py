@@ -9,6 +9,6 @@ if __name__ == '__main__':
             filename, filesize = ss.separate_metadata(received_metadata)
             ss.download_file(
                 client_socket,
-                filename,
+                ss.get_file(filename),
                 ss.create_progress_bar(filename, filesize))
         ss.close_sockets(client_socket)
