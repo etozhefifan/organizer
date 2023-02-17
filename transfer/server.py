@@ -1,6 +1,6 @@
-from sockets.transfer import ServerSocket
+from transfer.sockets.server_socket import ServerSocket
 
-if __name__ == '__main__':
+def main():
     with ServerSocket() as ss:
         ss.setup_socket()
         while True:

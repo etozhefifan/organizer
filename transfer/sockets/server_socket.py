@@ -3,7 +3,7 @@ import os
 
 from tqdm import tqdm
 
-from config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, PATH_TO_DIR
+from transfer.config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, PATH_TO_DIR
 
 
 class ServerSocket:
@@ -13,7 +13,7 @@ class ServerSocket:
 
     def __enter__(self):
         print(
-            f'Listening at {self.host}:{self.port}\n'
+            f'Listening at {self.host}:{self.port} '
             'Waiting for the client to connect !*!'
         )
         return self

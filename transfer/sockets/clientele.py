@@ -60,7 +60,7 @@ class ClientSocket:
     def data_received(self):
         confirmation = self.transfer_socket.recv(BUFFER_SIZE)
         print(confirmation)
-    
+
     def set_file(self):
         filename = input('File to transfer : ')
         filesize = os.path.getsize(filename)
