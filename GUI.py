@@ -12,25 +12,41 @@ class GUI(ctk.CTkFrame):
     def __init__(self, master):
         self.root = super().__init__(master)
         sys.stdout.write = self.redirector
-        self.frame = self.create_frame()
-        self.label = self.create_label()
+        self.server_frame = self.create_server_frame()
+        self.client_frame = self.create_client_frame()
+        self.server_label = self.create_server_label()
+        self.client_label = self.create_client_label()
         self.start_server_button = self.create_start_server_button()
         self.upload_button = self.create_start_upload_button()
         # self.stop_button = self.create_stop_buttion()
         self.textbox = self.create_textbox()
 
-    def create_frame(self):
+    def create_server_frame(self):
         frame = ctk.CTkFrame(master=self.root)
         frame.pack(pady=20, padx=60, fill='both')
         return frame
 
-    def create_label(self):
+    def create_client_frame(self):
+        frame = ctk.CTkFrame(master=self.root)
+        frame.pack(pady=20, padx=60, fill='both')
+        return frame
+
+    def create_server_label(self):
         label = ctk.CTkLabel(
-            master=self.frame,
+            master=self.server_frame,
             text='Server',
             font=('Roboto', 24)
         )
-        label.pack(pady=6, padx=6)
+        label.pack(pady=20, padx=60)
+        return label
+
+    def create_client_label(self):
+        label = ctk.CTkLabel(
+            master=self.client_frame,
+            text='Client',
+            font=('Roboto', 24)
+        )
+        label.pack(pady=20, padx=60)
         return label
 
     def create_textbox(self):
@@ -43,7 +59,7 @@ class GUI(ctk.CTkFrame):
 
     def create_start_server_button(self):
         button = ctk.CTkButton(
-            master=self.frame,
+            master=self.server_frame,
             text='Start server',
             command=main_server,
             font=('Roboto', 20),
@@ -63,7 +79,7 @@ class GUI(ctk.CTkFrame):
 
     def create_start_upload_button(self):
         button = ctk.CTkButton(
-            master=self.frame,
+            master=self.client_frame,
             text='Start upload',
             command=lambda: main_client(choose_file()),
             font=('Roboto', 20),

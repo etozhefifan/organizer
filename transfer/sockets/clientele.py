@@ -37,6 +37,7 @@ class ClientSocket:
 
     def open_file(self, filename, progress_bar):
         with open(filename, mode='rb') as f:
+            print('Sending ', os.path.basename(filename))
             bytes_to_transfer = f.read(BUFFER_SIZE)
             while bytes_to_transfer:
                 progress_bar.update(len(bytes_to_transfer))
