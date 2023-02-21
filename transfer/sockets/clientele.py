@@ -1,7 +1,7 @@
 import socket
 import os
 
-from tqdm import tqdm
+from tqdm import trange, tqdm
 
 
 from config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
@@ -45,7 +45,7 @@ class ClientSocket:
 
     def create_progress_bar(self, filename, filesize):
         progress_bar = tqdm(
-            range(filesize),
+            trange(filesize),
             f'Sending {filename}',
             unit='B',
             unit_scale=True,

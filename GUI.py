@@ -1,51 +1,93 @@
 from transfer.server import main
 
-import customtkinter
+import customtkinter as ctk
 import sys
 
-customtkinter.set_appearance_mode('system')
-customtkinter.set_default_color_theme('blue')
-
-root = customtkinter.CTk()
-root.geometry('1024x720')
+ctk.set_appearance_mode('system')
+ctk.set_default_color_theme('blue')
 
 
-def test():
-    print(f'Hosting at test')
+class GUI(ctk.CTkFrame):
+    def __init__(self, master):
+        self.root = super().__init__(master)
+        sys.stdout.write = self.redirector
+        self.frame = self.create_frame()
+        self.label = self.create_label()
+        self.start_button = self.create_start_button()
+        # self.stop_button = self.create_stop_buttion()
+        self.upload_button = self.create_choose_file_button()
+        self.textbox = self.create_textbox()
+
+    def create_frame(self):
+        frame = ctk.CTkFrame(master=self.root)
+        frame.pack(pady=20, padx=60, fill='both')
+        return frame
+
+    def create_label(self):
+        label = ctk.CTkLabel(
+            master=self.frame,
+            text='Server',
+            font=('Roboto', 24)
+        )
+        label.pack(pady=6, padx=6)
+        return label
+
+    def create_textbox(self):
+        textbox = ctk.CTkTextbox(
+            master=self.root,
+            font=('Roboto', 20),
+        )
+        textbox.pack(pady=20, padx=60, fill='both')
+        return textbox
+
+    def create_start_button(self):
+        button = ctk.CTkButton(
+            master=self.frame,
+            text='Start server',
+            command=main,
+            font=('Roboto', 20),
+        )
+        button.pack(pady=12, padx=10)
+        return button
+
+    # def create_stop_buttion(self):
+    #     button = ctk.CTkButton(
+    #         master=self.frame,
+    #         text='Stop server',
+    #         command=close_sockets,
+    #         font=('Roboto', 20),
+    #     )
+    #     button.pack(pady=12, padx=10)
+    #     return buttonv
+    
+    def create_choose_file_button(self):
+        button = ctk.CTkButton(
+            master=self.frame,
+            text='Choose file',
+            command=self.choose_file,
+            font=('Roboto', 20),
+        )
+        button.pack(pady=12, padx=10)
+        return button
+
+    def choose_file(self):
+        self.root = ctk.filedialog.askopenfilename(
+            initialdir='~',
+            filetypes=('*', '*'),
+        )
+
+    def redirector(self, input_string):
+        self.textbox.insert(ctk.INSERT, text=input_string)
+        self.textbox.update_idletasks()
 
 
-frame = customtkinter.CTkFrame(master=root)
-frame.pack(pady=20, padx=60, fill='both')
-termf = customtkinter.CTkFrame(master=root)
-termf.pack(pady=20,padx=60, fill='both')
-textbot = customtkinter.CTkTextbox(master=root)
-textbot.pack(pady=20, padx=60, fill='both')
+def initialize_root():
+    root = ctk.CTk()
+    root.title('Digital Library')
+    root.geometry('1024x720')
+    return root
 
 
-def redirector(input_string):
-    textbot.insert(customtkinter.INSERT, text=input_string)
-    textbot.update_idletasks()
-
-
-label = customtkinter.CTkLabel(
-    master=frame,
-    text='Test',
-)
-label.pack(pady=12, padx=10)
-
-button = customtkinter.CTkButton(
-    master=frame,
-    text='Testilovo',
-    command=main,
-)
-button.pack(pady=12, padx=10)
-button = customtkinter.CTkButton(
-    master=frame,
-    text='print',
-    command=test,
-)
-button.pack(pady=12, padx=10)
-
-sys.stdout.write = redirector
-
-root.mainloop()
+if __name__ == '__main__':
+    app = GUI(initialize_root())
+    app.mainloop()

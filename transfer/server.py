@@ -1,5 +1,9 @@
 from transfer.sockets.server_socket import ServerSocket
 
+# def close_sockets():
+#     ss.close_sockets()
+
+
 def main():
     with ServerSocket() as ss:
         ss.setup_socket()
@@ -12,4 +16,3 @@ def main():
                 client_socket,
                 filename,
                 ss.create_progress_bar(filename, filesize))
-        ss.close_sockets(client_socket)
