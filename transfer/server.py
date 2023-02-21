@@ -4,7 +4,7 @@ from transfer.sockets.server_socket import ServerSocket
 #     ss.close_sockets()
 
 
-def main():
+def main_server():
     with ServerSocket() as ss:
         ss.setup_socket()
         while True:

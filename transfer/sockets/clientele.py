@@ -4,7 +4,7 @@ import os
 from tqdm import trange, tqdm
 
 
-from config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
+from transfer.config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
 
 
 class ClientSocket:
@@ -61,10 +61,9 @@ class ClientSocket:
         confirmation = self.transfer_socket.recv(BUFFER_SIZE)
         print(confirmation)
 
-    def set_file(self):
-        filename = input('File to transfer : ')
-        filesize = os.path.getsize(filename)
-        return filename, filesize
+    def set_file(self, path):
+        filesize = os.path.getsize(path)
+        return path, filesize
 
     def close_socket(self):
         print('[-] Connection closed')

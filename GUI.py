@@ -1,4 +1,5 @@
-from transfer.server import main
+from transfer.server import main_server
+from transfer.client import main_client
 
 import customtkinter as ctk
 import sys
@@ -13,9 +14,9 @@ class GUI(ctk.CTkFrame):
         sys.stdout.write = self.redirector
         self.frame = self.create_frame()
         self.label = self.create_label()
-        self.start_button = self.create_start_button()
+        self.start_server_button = self.create_start_server_button()
+        self.upload_button = self.create_start_upload_button()
         # self.stop_button = self.create_stop_buttion()
-        self.upload_button = self.create_choose_file_button()
         self.textbox = self.create_textbox()
 
     def create_frame(self):
@@ -40,11 +41,11 @@ class GUI(ctk.CTkFrame):
         textbox.pack(pady=20, padx=60, fill='both')
         return textbox
 
-    def create_start_button(self):
+    def create_start_server_button(self):
         button = ctk.CTkButton(
             master=self.frame,
             text='Start server',
-            command=main,
+            command=main_server,
             font=('Roboto', 20),
         )
         button.pack(pady=12, padx=10)
@@ -59,22 +60,16 @@ class GUI(ctk.CTkFrame):
     #     )
     #     button.pack(pady=12, padx=10)
     #     return buttonv
-    
-    def create_choose_file_button(self):
+
+    def create_start_upload_button(self):
         button = ctk.CTkButton(
             master=self.frame,
-            text='Choose file',
-            command=self.choose_file,
+            text='Start upload',
+            command=lambda: main_client(choose_file()),
             font=('Roboto', 20),
         )
         button.pack(pady=12, padx=10)
         return button
-
-    def choose_file(self):
-        self.root = ctk.filedialog.askopenfilename(
-            initialdir='~',
-            filetypes=('*', '*'),
-        )
 
     def redirector(self, input_string):
         self.textbox.insert(ctk.INSERT, text=input_string)
@@ -86,6 +81,14 @@ def initialize_root():
     root.title('Digital Library')
     root.geometry('1024x720')
     return root
+
+
+def choose_file():
+    filename = ctk.filedialog.askopenfilename(
+        initialdir='~',
+        filetypes=(('all files', '*.*'),),
+    )
+    return filename
 
 
 if __name__ == '__main__':
