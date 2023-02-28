@@ -13,6 +13,7 @@ class ServerSocket:
     host = HOST_SERVER
     port = PORT
     separator = SEPARATOR
+    server_online = True
 
     def __enter__(self):
         print(
@@ -55,8 +56,8 @@ class ServerSocket:
             client_socket,
             filename: str,
             progress_bar,
-            path_to_downloads: str) -> None:
-        with open(os.path.join(path_to_downloads, filename), 'wb') as f:
+            path_to_storage: str) -> None:
+        with open(os.path.join(path_to_storage, filename), 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
                 f.write(bytes_received)
@@ -101,4 +102,9 @@ class ServerSocket:
         else:
             os.mkdir(os.path.join(path_to_downloads, NAME_OF_PROGRAM))
             print('Directory created')
+        return os.path.join(path_to_downloads, NAME_OF_PROGRAM)
+
+    @logger_decorator
+    def stop_server(self):
+        self.server_online = False
 

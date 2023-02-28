@@ -18,7 +18,7 @@ class GUI(ctk.CTkFrame):
         self.client_label = self.create_client_label()
         self.start_server_button = self.create_start_server_button()
         self.upload_button = self.create_start_upload_button()
-        # self.stop_button = self.create_stop_buttion()
+        self.stop_button = self.create_stop_buttion()
         self.textbox = self.create_textbox()
 
     def create_server_frame(self):
@@ -67,15 +67,15 @@ class GUI(ctk.CTkFrame):
         button.pack(pady=12, padx=10)
         return button
 
-    # def create_stop_buttion(self):
-    #     button = ctk.CTkButton(
-    #         master=self.frame,
-    #         text='Stop server',
-    #         command=close_sockets,
-    #         font=('Roboto', 20),
-    #     )
-    #     button.pack(pady=12, padx=10)
-    #     return buttonv
+    def create_stop_buttion(self):
+        button = ctk.CTkButton(
+            master=self.root,
+            text='Close program',
+            command=quit,
+            font=('Roboto', 20),
+        )
+        button.pack(pady=12, padx=10)
+        return button
 
     def create_start_upload_button(self):
         button = ctk.CTkButton(
@@ -105,6 +105,8 @@ def choose_file():
         filetypes=(('all files', '*.*'),),
     )
     return filename
+
+
 
 
 if __name__ == '__main__':
