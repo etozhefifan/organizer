@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 from transfer.decorator import logger_decorator
 from transfer.config import (
-    HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, PATH_TO_DIR
+    HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, NAME_OF_PROGRAM
 )
 
 
@@ -50,8 +50,13 @@ class ServerSocket:
         return received
 
     @logger_decorator
-    def download_file(self, client_socket, filename, progress_bar):
-        with open(os.path.join(PATH_TO_DIR, filename), 'wb') as f:
+    def download_file(
+            self,
+            client_socket,
+            filename: str,
+            progress_bar,
+            path_to_downloads: str) -> None:
+        with open(os.path.join(path_to_downloads, filename), 'wb') as f:
             bytes_received = client_socket.recv(BUFFER_SIZE)
             while bytes_received:
                 f.write(bytes_received)
@@ -77,6 +82,23 @@ class ServerSocket:
         return progress_bar
 
     @logger_decorator
-    def close_sockets(self):
+    def close_sockets(self) -> None:
         print('Server closed')
         self.transfer_socket.close()
+
+    @logger_decorator
+    def get_path_to_downloads(self) -> str:
+        if os.name == 'nt':
+            path_to_downloads = f"{os.getenv('USERPROFILE')}\\Downloads"
+        path_to_downloads = f"{os.getenv('HOME')}/Downloads"
+        return path_to_downloads
+
+    @logger_decorator
+    def check_if_storage_exists(self, path_to_downloads: str) -> None:
+        downloads_content = os.listdir(path_to_downloads)
+        if NAME_OF_PROGRAM in downloads_content:
+            print('Directory is already created')
+        else:
+            os.mkdir(os.path.join(path_to_downloads, NAME_OF_PROGRAM))
+            print('Directory created')
+

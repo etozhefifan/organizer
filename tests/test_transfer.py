@@ -5,9 +5,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 root_dir_content = os.listdir(BASE_DIR)
 
 
-@pytest.fixture
-def 
-
 def test_check_folder():
     assert 'transfer' in root_dir_content
 
