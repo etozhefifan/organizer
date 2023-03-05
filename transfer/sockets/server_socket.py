@@ -3,8 +3,8 @@ import os
 
 from tqdm import tqdm
 
-from transfer.decorator import logger_decorator
-from transfer.config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, NAME_OF_PROGRAM
+from .utils.decorator import logger_decorator
+from .utils.config import HOST_SERVER, PORT, BUFFER_SIZE, SEPARATOR, NAME_OF_PROGRAM
 
 
 class ServerSocket:
@@ -18,8 +18,6 @@ class ServerSocket:
             f"Listening at {self.host}:{self.port} "
             "Waiting for the client to connect !*!"
         )
-        hostname = socket.gethostname()
-        print(socket.gethostbyname(hostname))
         return self
 
     def __exit__(self, *args, **kwargs):

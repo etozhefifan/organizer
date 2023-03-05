@@ -4,7 +4,7 @@ import os
 from tqdm import trange, tqdm
 
 
-from transfer.config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
+from transfer.sockets.utils.config import BUFFER_SIZE, SEPARATOR, PORT, HOST_CLIENT
 
 
 class ClientSocket:

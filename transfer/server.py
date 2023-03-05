@@ -1,4 +1,4 @@
-from transfer.sockets.server_socket import ServerSocket
+from sockets.server_socket import ServerSocket
 
 
 def main_server():
@@ -17,3 +17,6 @@ def main_server():
                 ss.create_progress_bar(filename, filesize),
                 path_to_storage,
             )
+
+if __name__ == '__main__':
+    main_server()
