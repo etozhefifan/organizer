@@ -3,7 +3,8 @@ def logger_decorator(func):
         try:
             result = func(*args, **kwargs)
         except Exception as ex:
-            print('Error occured during transfer: ', str(ex))
+            print("Error occured during transfer: ", str(ex))
             raise
         return result
+
     return wrapper
