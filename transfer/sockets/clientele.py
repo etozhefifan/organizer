@@ -36,8 +36,8 @@ class ClientSocket:
         )
 
     def open_file(self, filename, progress_bar):
-        with open(filename, mode='rb') as f:
-            print('Sending ', os.path.basename(filename))
+        with open(filename, mode="rb") as f:
+            print("Sending ", os.path.basename(filename))
             bytes_to_transfer = f.read(BUFFER_SIZE)
             while bytes_to_transfer:
                 progress_bar.update(len(bytes_to_transfer))
@@ -47,16 +47,14 @@ class ClientSocket:
     def create_progress_bar(self, filename, filesize):
         progress_bar = tqdm(
             trange(filesize),
-            f'Sending {filename}',
-            unit='B',
+            f"Sending {filename}",
+            unit="B",
             unit_scale=True,
         )
         return progress_bar
 
     def send_file_metadata(self, filename, filesize):
-        return self.transfer_socket.sendall(
-            f'{filename}{SEPARATOR}{filesize}'.encode()
-        )
+        return self.transfer_socket.sendall(f"{filename}{SEPARATOR}{filesize}".encode())
 
     def data_received(self):
         confirmation = self.transfer_socket.recv(BUFFER_SIZE)
@@ -67,6 +65,6 @@ class ClientSocket:
         return path, filesize
 
     def close_socket(self):
-        print('[-] Connection closed')
+        print("[-] Connection closed")
         self.transfer_socket.shutdown(socket.SHUT_WR)
         self.transfer_socket.close()

@@ -15,4 +15,5 @@ def main_server():
                 client_socket,
                 filename,
                 ss.create_progress_bar(filename, filesize),
-                path_to_storage)
+                path_to_storage,
+            )

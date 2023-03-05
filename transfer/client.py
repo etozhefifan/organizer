@@ -9,4 +9,4 @@ def main_client(path):
             cs.send_file_metadata(filename, filesize)
             cs.data_received()
             cs.send_file(filename, filesize)
-    print('Please, choose file to upload to server')
+    print("Please, choose file to upload to server")
