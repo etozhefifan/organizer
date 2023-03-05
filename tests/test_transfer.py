@@ -1,4 +1,3 @@
-import pytest
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +25,7 @@ class TestServerSocket:
         assert self.server.host == self.host
 
     def test_server_separator(self):
-        from transfer.config import SEPARATOR
+        from transfer.sockets.utils.config import SEPARATOR
 
         assert self.server.separator == SEPARATOR
 

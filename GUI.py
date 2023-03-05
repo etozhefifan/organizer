@@ -1,4 +1,3 @@
-from transfer.server import main_server
 from transfer.client import main_client
 
 import customtkinter as ctk
@@ -12,31 +11,16 @@ class GUI(ctk.CTkFrame):
     def __init__(self, master):
         self.root = super().__init__(master)
         sys.stdout.write = self.redirector
-        self.server_frame = self.create_server_frame()
         self.client_frame = self.create_client_frame()
-        self.server_label = self.create_server_label()
         self.client_label = self.create_client_label()
-        self.start_server_button = self.create_start_server_button()
         self.upload_button = self.create_start_upload_button()
-        self.stop_button = self.create_stop_buttion()
+        self.stop_button = self.create_stop_button()
         self.textbox = self.create_textbox()
-
-    def create_server_frame(self):
-        frame = ctk.CTkFrame(master=self.root)
-        frame.pack(pady=20, padx=60, fill="both")
-        return frame
 
     def create_client_frame(self):
         frame = ctk.CTkFrame(master=self.root)
         frame.pack(pady=20, padx=60, fill="both")
         return frame
-
-    def create_server_label(self):
-        label = ctk.CTkLabel(
-            master=self.server_frame, text="Server", font=("Roboto", 24)
-        )
-        label.pack(pady=20, padx=60)
-        return label
 
     def create_client_label(self):
         label = ctk.CTkLabel(
@@ -53,17 +37,7 @@ class GUI(ctk.CTkFrame):
         textbox.pack(pady=20, padx=60, fill="both")
         return textbox
 
-    def create_start_server_button(self):
-        button = ctk.CTkButton(
-            master=self.server_frame,
-            text="Start server",
-            command=main_server,
-            font=("Roboto", 20),
-        )
-        button.pack(pady=12, padx=10)
-        return button
-
-    def create_stop_buttion(self):
+    def create_stop_button(self):
         button = ctk.CTkButton(
             master=self.root,
             text="Close program",
