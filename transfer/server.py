@@ -16,4 +16,3 @@ def main_server():
                 filename,
                 ss.create_progress_bar(filename, filesize),
                 path_to_storage)
-

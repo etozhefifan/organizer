@@ -20,6 +20,8 @@ class ServerSocket:
             f'Listening at {self.host}:{self.port} '
             'Waiting for the client to connect !*!'
         )
+        hostname = socket.gethostname()
+        print(socket.gethostbyname(hostname))
         return self
 
     def __exit__(self, *args, **kwargs):
@@ -95,7 +97,7 @@ class ServerSocket:
         return path_to_downloads
 
     @logger_decorator
-    def check_if_storage_exists(self, path_to_downloads: str) -> None:
+    def check_if_storage_exists(self, path_to_downloads: str) -> str:
         downloads_content = os.listdir(path_to_downloads)
         if NAME_OF_PROGRAM in downloads_content:
             print('Directory is already created')
