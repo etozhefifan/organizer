@@ -1,14 +1,22 @@
-from sockets.transfer import ServerSocket
+from sockets.server_socket import ServerSocket
 
-if __name__ == '__main__':
+
+def main_server():
     with ServerSocket() as ss:
+        path_to_downloads = ss.get_path_to_downloads()
+        path_to_storage = ss.check_if_storage_exists(path_to_downloads)
         ss.setup_socket()
-        while True:
+        while ss.server_online:
             client_socket = ss.accept_connection()
             received_metadata = ss.receive_metadata(client_socket)
             filename, filesize = ss.separate_metadata(received_metadata)
+            filename = ss.get_file(filename)
             ss.download_file(
                 client_socket,
                 filename,
-                ss.create_progress_bar(filename, filesize))
-        ss.close_sockets(client_socket)
+                ss.create_progress_bar(filename, filesize),
+                path_to_storage,
+            )
+
+if __name__ == '__main__':
+    main_server()
